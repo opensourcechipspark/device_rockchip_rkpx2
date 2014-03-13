@@ -3,16 +3,16 @@
 # Product-specific compile-time definitions.
 #
 TARGET_PREBUILT_KERNEL ?= kernel/arch/arm/boot/Image
-TARGET_BOARD_PLATFORM ?= rk30xx
+TARGET_BOARD_PLATFORM ?= rkpx2
 TARGET_BOARD_PLATFORM_GPU ?= mali400
-TARGET_BOARD_HARDWARE ?= rk30board
+TARGET_BOARD_HARDWARE ?= rkpx2board
 BOARD_USE_LCDC_COMPOSER ?= false
 BOARD_USE_LOW_MEM ?= false
 TARGET_NO_BOOTLOADER ?= true
 TARGET_CPU_VARIANT := cortex-a9
-TARGET_RELEASETOOLS_EXTENSIONS := device/rockchip/rksdk
+TARGET_RELEASETOOLS_EXTENSIONS := device/rockchip/rkpx2
 
-DEVICE_PACKAGE_OVERLAYS += device/rockchip/rksdk/overlay
+DEVICE_PACKAGE_OVERLAYS += device/rockchip/$(TARGET_PRODUCT)/overlay
 
 ifeq ($(strip $(TARGET_BOARD_PLATFORM_GPU)), mali400)
 ifeq ($(TARGET_BOARD_PLATFORM),rk2928)
@@ -48,7 +48,7 @@ BOARD_SYSTEMIMAGE_PARTITION_SIZE ?= 1073741824
 BOARD_FLASH_BLOCK_SIZE ?= 131072
 
 include device/rockchip/$(TARGET_PRODUCT)/wifi_bt.mk
-include device/rockchip/rksdk/wifi_bt_common.mk
+include device/rockchip/$(TARGET_PRODUCT)/wifi_bt_common.mk
 
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
@@ -66,12 +66,6 @@ BUILD_WITH_GOOGLE_MARKET ?= true
 # face lock
 BUILD_WITH_FACELOCK ?= false
 
-# ebook
-BUILD_WITH_RK_EBOOK ?= false
-
-# rksu
-BUILD_WITH_RKSU ?= false
-
 USE_OPENGL_RENDERER ?= true
 
 # rk30sdk uses Cortex A9
@@ -79,7 +73,8 @@ TARGET_EXTRA_CFLAGS += $(call cc-option,-mtune=cortex-a9,$(call cc-option,-mtune
 
 # sensors
 BOARD_SENSOR_ST := true
-#BOARD_SENSOR_COMPASS_AK8963 := true    #if use akm8963
+#use akm8963
+BOARD_SENSOR_COMPASS_AK8963 := true
 #BOARD_SENSOR_ANGLE := true		#if need calculation angle between two gsensors
 #BOARD_SENSOR_CALIBRATION := true	#if need calibration
 
@@ -95,9 +90,10 @@ BOARD_CODEC_WM8994 := false
 BOARD_CODEC_RT5625_SPK_FROM_SPKOUT := false
 BOARD_CODEC_RT5625_SPK_FROM_HPOUT := false
 BOARD_CODEC_RT3261 := false
-BOARD_CODEC_RT3224 := true
+BOARD_CODEC_RT3224 := false
 BOARD_CODEC_RT5631 := false
 BOARD_CODEC_RK616 := false
+BOARD_CODEC_WM8960 := true
 
 #if set to true m-user would be disabled and UMS enabled, if set to disable UMS would be disabled and m-user enabled
 BUILD_WITH_UMS := true

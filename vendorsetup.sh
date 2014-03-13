@@ -1,1 +1,1 @@
-add_lunch_combo rksdk-eng
+add_lunch_combo rkpx2-eng

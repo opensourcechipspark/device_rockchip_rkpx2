@@ -25,33 +25,11 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
 PRODUCT_COPY_FILES += \
     $(TARGET_PREBUILT_KERNEL):kernel
 
-ifeq ($(strip $(BOARD_USE_LCDC_COMPOSER)), true)
-include frameworks/native/build/tablet-10in-xhdpi-2048-dalvik-heap.mk
-PRODUCT_PROPERTY_OVERRIDES += \
-    dalvik.vm.lockprof.threshold=500 \
-    dalvik.vm.dexopt-flags=m=y \
-    dalvik.vm.stack-trace-file=/data/anr/traces.txt \
-    ro.hwui.texture_cache_size=72 \
-    ro.hwui.layer_cache_size=48 \
-    ro.hwui.path_cache_size=16 \
-    ro.hwui.shape_cache_size=4 \
-    ro.hwui.gradient_cache_size=1 \
-    ro.hwui.drop_shadow_cache_size=6 \
-    ro.hwui.texture_cache_flush_rate=0.4 \
-    ro.hwui.text_small_cache_width=1024 \
-    ro.hwui.text_small_cache_height=1024 \
-    ro.hwui.text_large_cache_width=2048 \
-    ro.hwui.text_large_cache_height=1024 \
-    ro.hwui.disable_scissor_opt=true \
-    ro.rk.screenshot_enable=true   \
-    persist.sys.ui.hw=true
 
-else
 ifeq ($(strip $(BOARD_USE_LOW_MEM)), true)
 include frameworks/native/build/tablet-dalvik-heap.mk
 else
 include frameworks/native/build/tablet-7in-hdpi-1024-dalvik-heap.mk
-endif
 endif
 
 PRODUCT_PACKAGES += WifiDisplay
@@ -77,25 +55,16 @@ ifeq ($(strip $(BUILD_WITH_FACELOCK)),true)
 include vendor/google/facelock.mk
 endif
 
-########################################################
-#rksu
-########################################################
-ifeq ($(strip $(BUILD_WITH_RKSU)),true)
 PRODUCT_COPY_FILES += \
-	device/rockchip/rksdk/rksu:system/xbin/rksu
-endif
-
-PRODUCT_COPY_FILES += \
-    device/rockchip/rksdk/init.rc:root/init.rc \
-    device/rockchip/rksdk/init.environ.rc:root/init.environ.rc \
-    device/rockchip/rksdk/init.$(TARGET_BOARD_HARDWARE).rc:root/init.$(TARGET_BOARD_HARDWARE).rc \
-    device/rockchip/rksdk/init.$(TARGET_BOARD_HARDWARE).usb.rc:root/init.$(TARGET_BOARD_HARDWARE).usb.rc \
-    $(call add-to-product-copy-files-if-exists,device/rockchip/rksdk/init.$(TARGET_BOARD_HARDWARE).bootmode.emmc.rc:root/init.$(TARGET_BOARD_HARDWARE).bootmode.emmc.rc) \
-    $(call add-to-product-copy-files-if-exists,device/rockchip/rksdk/init.$(TARGET_BOARD_HARDWARE).bootmode.unknown.rc:root/init.$(TARGET_BOARD_HARDWARE).bootmode.unknown.rc) \
-    device/rockchip/rksdk/ueventd.$(TARGET_BOARD_HARDWARE).rc:root/ueventd.$(TARGET_BOARD_HARDWARE).rc \
-    device/rockchip/rksdk/media_profiles_default.xml:system/etc/media_profiles_default.xml \
-    device/rockchip/rksdk/alarm_filter.xml:system/etc/alarm_filter.xml \
-    device/rockchip/rksdk/rk29-keypad.kl:system/usr/keylayout/rk29-keypad.kl
+    device/rockchip/rkpx2/init/init.rc:root/init.rc \
+    device/rockchip/rkpx2/init/init.environ.rc:root/init.environ.rc \
+    device/rockchip/rkpx2/init/init.$(TARGET_BOARD_HARDWARE).rc:root/init.$(TARGET_BOARD_HARDWARE).rc \
+    device/rockchip/rkpx2/init/init.$(TARGET_BOARD_HARDWARE).usb.rc:root/init.$(TARGET_BOARD_HARDWARE).usb.rc \
+    $(call add-to-product-copy-files-if-exists,device/rockchip/rkpx2/init/init.$(TARGET_BOARD_HARDWARE).bootmode.emmc.rc:root/init.$(TARGET_BOARD_HARDWARE).bootmode.emmc.rc) \
+    $(call add-to-product-copy-files-if-exists,device/rockchip/rkpx2/init/init.$(TARGET_BOARD_HARDWARE).bootmode.unknown.rc:root/init.$(TARGET_BOARD_HARDWARE).bootmode.unknown.rc) \
+    device/rockchip/rkpx2/init/ueventd.$(TARGET_BOARD_HARDWARE).rc:root/ueventd.$(TARGET_BOARD_HARDWARE).rc \
+    device/rockchip/rkpx2/conf/media_profiles_default.xml:system/etc/media_profiles_default.xml \
+    device/rockchip/rkpx2/conf/rk29-keypad.kl:system/usr/keylayout/rk29-keypad.kl
 
 PRODUCT_COPY_FILES += \
     hardware/broadcom/wlan/bcmdhd/config/wpa_supplicant_overlay.conf:system/etc/wifi/wpa_supplicant_overlay.conf \
@@ -104,60 +73,34 @@ PRODUCT_COPY_FILES += \
 ifneq ($(strip $(BOARD_CONNECTIVITY_VENDOR)), MediaTek)
 ifneq ($(strip $(BOARD_CONNECTIVITY_VENDOR)), RealTek)
 PRODUCT_COPY_FILES += \
-    device/rockchip/rksdk/init.connectivity.rc:root/init.connectivity.rc
+    device/rockchip/rkpx2/init/init.connectivity.rc:root/init.connectivity.rc
 endif
 endif
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/audio_policy.conf:system/etc/audio_policy.conf
+    $(LOCAL_PATH)/conf/audio_policy.conf:system/etc/audio_policy.conf
 
 
 PRODUCT_COPY_FILES += \
-    device/rockchip/rksdk/fstab.$(TARGET_BOARD_HARDWARE).bootmode.unknown:root/fstab.$(TARGET_BOARD_HARDWARE).bootmode.unknown \
-    device/rockchip/rksdk/fstab.$(TARGET_BOARD_HARDWARE).bootmode.emmc:root/fstab.$(TARGET_BOARD_HARDWARE).bootmode.emmc
+    device/rockchip/rkpx2/conf/fstab.$(TARGET_BOARD_HARDWARE).bootmode.unknown:root/fstab.$(TARGET_BOARD_HARDWARE).bootmode.unknown \
+    device/rockchip/rkpx2/conf/fstab.$(TARGET_BOARD_HARDWARE).bootmode.emmc:root/fstab.$(TARGET_BOARD_HARDWARE).bootmode.emmc
 
 # For audio-recoard 
 PRODUCT_PACKAGES += \
     libsrec_jni
 
-ifeq ($(strip $(TARGET_BOARD_PLATFORM_GPU)), pvr)
-include device/rockchip/common/gpu/rk3168_gpu.mk
-include device/rockchip/common/vpu/rk30_vpu.mk
+include device/rockchip/common/gpu/rkpx2_gpu.mk
+include device/rockchip/common/vpu/rkpx2_vpu.mk
 include device/rockchip/common/wifi/rk30_wifi.mk
 include device/rockchip/common/nand/rk30_nand.mk
-include device/rockchip/common/ipp/rk29_ipp.mk
-else
-ifeq ($(strip $(TARGET_BOARD_PLATFORM)), rk2928)
-include device/rockchip/common/gpu/rk2928_gpu.mk
-include device/rockchip/common/vpu/rk2928_vpu.mk
-include device/rockchip/common/wifi/rk30_wifi.mk
-include device/rockchip/common/nand/rk2928_nand.mk
-else
-ifeq ($(strip $(TARGET_BOARD_PLATFORM)), rk3026)
-include device/rockchip/common/gpu/rk30xx_gpu.mk
-include device/rockchip/common/vpu/rk3026_vpu.mk
-include device/rockchip/common/wifi/rk30_wifi.mk
-include device/rockchip/common/nand/rk3026_nand.mk
-include device/rockchip/common/ipp/rk29_ipp.mk
-else
-include device/rockchip/common/gpu/rk30xx_gpu.mk  
-include device/rockchip/common/vpu/rk30_vpu.mk
-include device/rockchip/common/wifi/rk30_wifi.mk
-include device/rockchip/common/nand/rk30_nand.mk
-include device/rockchip/common/ipp/rk29_ipp.mk
-endif
-endif
-endif
 
-include device/rockchip/common/ion/rk30_ion.mk
-include device/rockchip/common/bin/rk30_bin.mk
+include device/rockchip/common/bin/rkpx2_bin.mk
 include device/rockchip/common/webkit/rk31_webkit.mk
 ifeq ($(strip $(BOARD_HAVE_BLUETOOTH)),true)
     include device/rockchip/common/bluetooth/rk30_bt.mk
 endif
-include device/rockchip/common/gps/rk30_gps.mk
 include device/rockchip/common/app/rkupdateservice.mk
-#include vendor/google/chrome.mk
+include device/rockchip/common/app/rkUserExperienceService.mk
 include device/rockchip/common/etc/adblock.mk
 
 # uncomment the line bellow to enable phone functions
@@ -167,10 +110,6 @@ include device/rockchip/common/features/rk-core.mk
 include device/rockchip/common/features/rk-camera.mk
 include device/rockchip/common/features/rk-camera-front.mk
 include device/rockchip/common/features/rk-gms.mk
-
-ifeq ($(strip $(BUILD_WITH_RK_EBOOK)),true)
-include device/rockchip/common/app/rkbook.mk
-endif
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
@@ -277,7 +216,7 @@ ifeq ($(strip $(BUILD_WITH_UMS)),true)
 
 
 	PRODUCT_COPY_FILES += \
-    		device/rockchip/rksdk/init.$(TARGET_BOARD_HARDWARE).hasUMS.true.rc:root/init.$(TARGET_BOARD_HARDWARE).environment.rc
+		device/rockchip/rkpx2/init/init.$(TARGET_BOARD_HARDWARE).hasUMS.true.rc:root/init.$(TARGET_BOARD_HARDWARE).environment.rc
 else
 	PRODUCT_PROPERTY_OVERRIDES += \
 		ro.factory.hasUMS=false \
@@ -285,7 +224,7 @@ else
        		#testing.mediascanner.skiplist = /mnt/shell/emulated/Android/
 
         PRODUCT_COPY_FILES += \
-                device/rockchip/rksdk/init.$(TARGET_BOARD_HARDWARE).hasUMS.false.rc:root/init.$(TARGET_BOARD_HARDWARE).environment.rc
+                device/rockchip/rkpx2/init/init.$(TARGET_BOARD_HARDWARE).hasUMS.false.rc:root/init.$(TARGET_BOARD_HARDWARE).environment.rc
 endif
 
 ########################################################
@@ -306,7 +245,7 @@ ifeq ($(strip $(BOARD_HAS_GPS)),true)
 		ro.factory.hasGPS=true
 else
 	PRODUCT_PROPERTY_OVERRIDES += \
-                ro.factory.hasGPS=false
+		ro.factory.hasGPS=false
 endif
 
 ########################################################
@@ -339,7 +278,7 @@ PRODUCT_PACKAGES += \
 
 # for bugreport
 ifneq ($(TARGET_BUILD_VARIANT),user)
-    PRODUCT_COPY_FILES += device/rockchip/rksdk/bugreport.sh:system/bin/bugreport.sh
+    PRODUCT_COPY_FILES += device/rockchip/rkpx2/bugreport.sh:system/bin/bugreport.sh
 endif
 
 
@@ -348,10 +287,6 @@ ifeq ($(strip $(BOARD_BOOT_READAHEAD)),true)
         $(LOCAL_PATH)/proprietary/readahead/readahead:root/sbin/readahead \
         $(LOCAL_PATH)/proprietary/readahead/readahead_list.txt:root/readahead_list.txt
 endif
-
-#whtest for bin
-PRODUCT_COPY_FILES += \
-    device/rockchip/rksdk/whtest.sh:system/bin/whtest.sh
     
 # for data clone
 include device/rockchip/common/data_clone/packdata.mk

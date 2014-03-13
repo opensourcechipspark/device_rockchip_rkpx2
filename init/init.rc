@@ -5,7 +5,7 @@
 #
 import /init.environ.rc
 import /init.usb.rc
-import /init.${ro.hardware}.rc
+import /init.rkpx2board.rc
 import /init.trace.rc
 
 on early-init
@@ -604,9 +604,5 @@ service mdnsd /system/bin/mdnsd
     user mdnsr
     group inet net_raw
     socket mdnsd stream 0660 mdnsr inet
-    disabled
-    oneshot
-
-service whtest /system/bin/whtest.sh
     disabled
     oneshot

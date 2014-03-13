@@ -21,10 +21,13 @@
 # "buildspec.mk" should never be checked in to source control.
 ######################################################################
 
+TARGET_BOARD_PLATFORM ?= rkpx2
+TARGET_BOARD_PLATFORM_GPU ?= mali400
+
 # Choose a product to build for.  Look in the products directory for ones
 # that work.
 ifndef TARGET_PRODUCT
-TARGET_PRODUCT:=rkps2
+TARGET_PRODUCT:=rkpx2
 endif
 
 # Choose a variant to build.  If you don't pick one, the default is eng.
